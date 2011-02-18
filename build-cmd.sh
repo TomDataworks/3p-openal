@@ -5,6 +5,8 @@ set -x
 # make errors fatal
 set -e
 
+TOP="$(dirname "$0")"
+
 OPENAL_VERSION="1.12.854"
 OPENAL_SOURCE_DIR="openal-soft-$OPENAL_VERSION"
 
@@ -31,7 +33,7 @@ case "$AUTOBUILD_PLATFORM" in
     ;;
 esac
 mkdir -p "$stage/LICENSES"
-cp COPYING > "$stage/LICENSES/openal.txt"
+cp "$TOP/$OPENAL_SOURCE_DIR/COPYING > "$stage/LICENSES/openal.txt"
 
 pass
 
