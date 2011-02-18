@@ -26,6 +26,14 @@ set -x
 stage="$(pwd)"
 case "$AUTOBUILD_PLATFORM" in
     "windows")
+        build_sln "OpenAL.sln" "Debug|Win32" "OpenAL32"
+        mkdir -p "$stage/lib"
+        mv Debug "$stage/lib/debug"
+
+        build_sln "OpenAL.sln" "Release|Win32" "OpenAL32"
+        mv Release "$stage/lib/release"
+        
+        cp -r "$TOP/$OPENAL_SOURCE_DIR/include" "$stage"
     ;;
     "darwin")
     ;;
@@ -33,7 +41,7 @@ case "$AUTOBUILD_PLATFORM" in
     ;;
 esac
 mkdir -p "$stage/LICENSES"
-cp "$TOP/$OPENAL_SOURCE_DIR/COPYING > "$stage/LICENSES/openal.txt"
+cp "$TOP/$OPENAL_SOURCE_DIR/COPYING" "$stage/LICENSES/openal.txt"
 
 pass
 
