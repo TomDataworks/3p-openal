@@ -1,0 +1,4 @@
+# Use Public Upload Locations
+public_build = true
+
+AUTOBUILD_VSVER=100
