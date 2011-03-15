@@ -49,7 +49,7 @@ case "$AUTOBUILD_PLATFORM" in
     "linux")
         mkdir -p openal
         pushd openal
-            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=$CC
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1
             make
         popd
 
@@ -60,7 +60,7 @@ case "$AUTOBUILD_PLATFORM" in
 
         mkdir -p freealut
         pushd freealut
-            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=$CC \
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1 \
                 -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$TOP/$OPENAL_SOURCE_DIR/include"
             make
             cp -P libalut.so "$stage/lib/release"
