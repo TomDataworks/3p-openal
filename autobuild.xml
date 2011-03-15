@@ -63,13 +63,12 @@
               </map>
               <key>configure</key>
               <map>
-                <key>options</key>
+                <key>arguments</key>
                 <array>
-                  <string>-DCMAKE_C_FLAGS="-m32"</string>
-                  <string>-DCMAKE_CXX_FLAGS="-m32"</string>
-                  <string>-DCMAKE_C_COMPILER=gcc-4.1</string>
-                  <string>-DCMAKE_CXX_COMPILER=g++4.1</string>
+                  <string>"no op"</string>
                 </array>
+                <key>command</key>
+                <string>echo</string>
               </map>
               <key>default</key>
               <string>True</string>

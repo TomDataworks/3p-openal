@@ -5,7 +5,7 @@ set -x
 # make errors fatal
 set -e
 
-TOP="$(dirname "$0")"
+TOP="$(readlink -f $(dirname "$0"))"
 
 OPENAL_VERSION="1.12.854"
 OPENAL_SOURCE_DIR="openal-soft-$OPENAL_VERSION"
@@ -47,12 +47,26 @@ case "$AUTOBUILD_PLATFORM" in
         popd
     ;;
     "linux")
-        make
+        mkdir -p openal
+        pushd openal
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=$CC
+            make
+        popd
 
         mkdir -p "$stage/lib/release"
-        cp -P "$stage/libopenal.so" "$stage/lib/release"
-        cp -P "$stage/libopenal.so.1" "$stage/lib/release"
-        cp "$stage/libopenal.so.1.12.854" "$stage/lib/release"
+        cp -P "$stage/openal/libopenal.so" "$stage/lib/release"
+        cp -P "$stage/openal/libopenal.so.1" "$stage/lib/release"
+        cp "$stage/openal/libopenal.so.1.12.854" "$stage/lib/release"
+
+        mkdir -p freealut
+        pushd freealut
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=$CC \
+                -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$TOP/$OPENAL_SOURCE_DIR/include"
+            make
+            cp -P libalut.so "$stage/lib/release"
+            cp -P libalut.so.0 "$stage/lib/release"
+            cp -P libalut.so.0.0.0 "$stage/lib/release"
+        popd
     ;;
 esac
 
