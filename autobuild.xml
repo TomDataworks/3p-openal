@@ -27,19 +27,11 @@
               <map>
                 <key>arguments</key>
                 <array>
+                  <string>-c</string>
                   <string>../build-cmd.sh</string>
                 </array>
                 <key>command</key>
                 <string>bash</string>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../openal-soft-1.12.854</string>
-                </array>
-                <key>command</key>
-                <string>cmake</string>
               </map>
               <key>name</key>
               <string>Release</string>
@@ -47,6 +39,7 @@
           </map>
           <key>manifest</key>
           <array>
+            <string>LICENSES/openal.txt</string>
             <string>include/AL/*.h</string>
           </array>
           <key>name</key>
@@ -61,17 +54,8 @@
               <key>build</key>
               <map>
               </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>"no op"</string>
-                </array>
-                <key>command</key>
-                <string>echo</string>
-              </map>
               <key>default</key>
-              <string>True</string>
+              <boolean>true</boolean>
               <key>name</key>
               <string>Release</string>
             </map>
@@ -92,11 +76,8 @@
               <key>build</key>
               <map>
               </map>
-              <key>configure</key>
-              <map>
-              </map>
               <key>default</key>
-              <string>True</string>
+              <boolean>true</boolean>
               <key>name</key>
               <string>Release</string>
             </map>
@@ -114,7 +95,7 @@
         </map>
       </map>
       <key>version</key>
-      <string>1.12.854-1.1.0</string>
+      <string>1.15.1-1.1.0</string>
     </map>
     <key>type</key>
     <string>autobuild</string>

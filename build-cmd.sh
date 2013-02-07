@@ -7,7 +7,7 @@ set -e
 
 TOP="$(readlink -f $(dirname "$0"))"
 
-OPENAL_VERSION="1.12.854"
+OPENAL_VERSION="1.15.1"
 OPENAL_SOURCE_DIR="openal-soft-$OPENAL_VERSION"
 
 FREEALUT_VERSION="1.1.0"
@@ -29,6 +29,7 @@ set -x
 stage="$(pwd)"
 case "$AUTOBUILD_PLATFORM" in
     "windows")
+        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 11" -DCMAKE_INSTALL_PREFIX=$stage
         build_sln "OpenAL.sln" "Debug|Win32" "OpenAL32"
         mkdir -p "$stage/lib"
         mv Debug "$stage/lib/debug"
