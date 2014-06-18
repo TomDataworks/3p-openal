@@ -2,10 +2,9 @@
 
 # turn on verbose debugging output for parabuild logs.
 set -x
+eval "$("$AUTOBUILD" source_environment)"
 # make errors fatal
 set -e
-
-TOP="$(readlink -f $(dirname "$0"))"
 
 OPENAL_VERSION="1.15.1"
 OPENAL_SOURCE_DIR="openal-soft-$OPENAL_VERSION"
@@ -37,7 +36,7 @@ case "$AUTOBUILD_PLATFORM" in
         build_sln "OpenAL.sln" "Release|Win32" "OpenAL32"
         mv Release "$stage/lib/release"
         
-        pushd "$TOP/$FREEALUT_SOURCE_DIR/admin/VisualStudioDotNET"
+        pushd "$stage/../$FREEALUT_SOURCE_DIR/admin/VisualStudioDotNET"
             build_sln "alut.sln" "Debug|Win32" "alut"
             build_sln "alut.sln" "Release|Win32" "alut"
             
@@ -62,20 +61,46 @@ case "$AUTOBUILD_PLATFORM" in
         mkdir -p freealut
         pushd freealut
             cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1 \
-                -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$TOP/$OPENAL_SOURCE_DIR/include"
+                -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
             make
             cp -P libalut.so "$stage/lib/release"
             cp -P libalut.so.0 "$stage/lib/release"
             cp -P libalut.so.0.0.0 "$stage/lib/release"
         popd
     ;;
+    "darwin")
+        mkdir -p openal
+        pushd openal
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_OSX_ARCHITECTURES='i386;x86_64' \
+                  -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS='-Wno-self-assign'
+            make
+        popd
+
+        mkdir -p "$stage/lib/release"
+        cp -P "$stage/openal/libopenal.dylib" "$stage/lib/release"
+        cp -P "$stage/openal/libopenal.1.dylib" "$stage/lib/release"
+        cp "$stage/openal/libopenal.${OPENAL_VERSION}.dylib" "$stage/lib/release"
+
+        mkdir -p freealut
+        pushd freealut
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_OSX_ARCHITECTURES='i386;x86_64' \
+                -DCMAKE_C_COMPILER=clang \
+                -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
+        make
+    cp -P "$stage/freealut/libalut.a" "$stage/lib/release"
+    cp -P "$stage/freealut/libalut_static.a" "$stage/lib/release"
+    cp -P "$stage/freealut/libalut.dylib" "$stage/lib/release"
+    cp -P "$stage/freealut/libalut.0.dylib" "$stage/lib/release"
+    cp -P "$stage/freealut/libalut.0.0.0.dylib" "$stage/lib/release"
+    popd
+    ;;
 esac
 
-cp -r "$TOP/$OPENAL_SOURCE_DIR/include" "$stage"
-cp -r "$TOP/$FREEALUT_SOURCE_DIR/include" "$stage"
+cp -r "$stage/../$OPENAL_SOURCE_DIR/include" "$stage"
+cp -r "$stage/../$FREEALUT_SOURCE_DIR/include" "$stage"
 
 mkdir -p "$stage/LICENSES"
-cp "$TOP/$OPENAL_SOURCE_DIR/COPYING" "$stage/LICENSES/openal.txt"
+cp "$stage/../$OPENAL_SOURCE_DIR/COPYING" "$stage/LICENSES/openal.txt"
 
 pass
 
