@@ -93,6 +93,13 @@ case "$AUTOBUILD_PLATFORM" in
     cp -P "$stage/freealut/libalut.0.dylib" "$stage/lib/release"
     cp -P "$stage/freealut/libalut.0.0.0.dylib" "$stage/lib/release"
     popd
+    pushd "$stage/lib/release/"
+        fix_dylib_id libalut.0.dylib
+        fix_dylib_id libalut.dylib
+        fix_dylib_id libopenal.${OPENAL_VERSION}.dylib
+        fix_dylib_id libopenal.1.dylib
+        fix_dylib_id libopenal.dylib
+    popd
     ;;
 esac
 
