@@ -28,7 +28,7 @@ set -x
 stage="$(pwd)"
 case "$AUTOBUILD_PLATFORM" in
     "windows")
-        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 11" -DCMAKE_INSTALL_PREFIX=$stage
+        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12" -DCMAKE_INSTALL_PREFIX=$stage
         build_sln "OpenAL.sln" "Debug|Win32" "OpenAL32"
         mkdir -p "$stage/lib"
         mv Debug "$stage/lib/debug"
@@ -40,10 +40,33 @@ case "$AUTOBUILD_PLATFORM" in
             build_sln "alut.sln" "Debug|Win32" "alut"
             build_sln "alut.sln" "Release|Win32" "alut"
             
-            cp -a "alut/Debug/alut.dll" "$stage/lib/debug"
-            cp -a "alut/Debug/alut.lib" "$stage/lib/debug"
-            cp -a "alut/Release/alut.dll" "$stage/lib/release"            
-            cp -a "alut/Release/alut.lib" "$stage/lib/release"            
+            cp -a "alut/Debug/Win32/alut.dll" "$stage/lib/debug"
+            cp -a "alut/Debug/Win32/alut.lib" "$stage/lib/debug"
+            cp -a "alut/Debug/Win32/alut.pdb" "$stage/lib/debug"
+            cp -a "alut/Release/Win32/alut.dll" "$stage/lib/release"
+            cp -a "alut/Release/Win32/alut.lib" "$stage/lib/release"
+            cp -a "alut/Release/Win32/alut.pdb" "$stage/lib/release"
+        popd
+    ;;
+    "windows64")
+        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12 Win64" -DCMAKE_INSTALL_PREFIX=$stage
+        build_sln "OpenAL.sln" "Debug|x64" "OpenAL32"
+        mkdir -p "$stage/lib"
+        mv Debug "$stage/lib/debug"
+
+        build_sln "OpenAL.sln" "Release|x64" "OpenAL32"
+        mv Release "$stage/lib/release"
+        
+        pushd "$stage/../$FREEALUT_SOURCE_DIR/admin/VisualStudioDotNET"
+            build_sln "alut.sln" "Debug|x64" "alut"
+            build_sln "alut.sln" "Release|x64" "alut"
+            
+            cp -a "alut/Debug/x64/alut.dll" "$stage/lib/debug"
+            cp -a "alut/Debug/x64/alut.lib" "$stage/lib/debug"
+            cp -a "alut/Debug/x64/alut.pdb" "$stage/lib/debug"
+            cp -a "alut/Release/x64/alut.dll" "$stage/lib/release"
+            cp -a "alut/Release/x64/alut.lib" "$stage/lib/release"
+            cp -a "alut/Release/x64/alut.pdb" "$stage/lib/release"
         popd
     ;;
     "linux")
