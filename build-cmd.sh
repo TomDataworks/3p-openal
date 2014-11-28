@@ -91,6 +91,26 @@ case "$AUTOBUILD_PLATFORM" in
             cp -P libalut.so.0.0.0 "$stage/lib/release"
         popd
     ;;
+    "linux64")
+        mkdir -p openal
+        pushd openal
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m64"
+            make
+        popd
+
+        mkdir -p "$stage/lib/release"
+        cp -a $stage/openal/libopenal.*so.* "$stage/lib/release"
+
+        mkdir -p freealut
+        pushd freealut
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m64" \
+                -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
+            make
+            cp -P libalut.so "$stage/lib/release"
+            cp -P libalut.so.0 "$stage/lib/release"
+            cp -P libalut.so.0.0.0 "$stage/lib/release"
+        popd
+    ;;
     "darwin")
         mkdir -p openal
         pushd openal
@@ -110,19 +130,19 @@ case "$AUTOBUILD_PLATFORM" in
                 -DCMAKE_C_COMPILER=clang \
                 -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
         make
-    cp -P "$stage/freealut/libalut.a" "$stage/lib/release"
-    cp -P "$stage/freealut/libalut_static.a" "$stage/lib/release"
-    cp -P "$stage/freealut/libalut.dylib" "$stage/lib/release"
-    cp -P "$stage/freealut/libalut.0.dylib" "$stage/lib/release"
-    cp -P "$stage/freealut/libalut.0.0.0.dylib" "$stage/lib/release"
-    popd
-    pushd "$stage/lib/release/"
-        fix_dylib_id libalut.0.dylib
-        fix_dylib_id libalut.dylib
-        fix_dylib_id libopenal.${OPENAL_VERSION}.dylib
-        fix_dylib_id libopenal.1.dylib
-        fix_dylib_id libopenal.dylib
-    popd
+        cp -P "$stage/freealut/libalut.a" "$stage/lib/release"
+        cp -P "$stage/freealut/libalut_static.a" "$stage/lib/release"
+        cp -P "$stage/freealut/libalut.dylib" "$stage/lib/release"
+        cp -P "$stage/freealut/libalut.0.dylib" "$stage/lib/release"
+        cp -P "$stage/freealut/libalut.0.0.0.dylib" "$stage/lib/release"
+        popd
+        pushd "$stage/lib/release/"
+            fix_dylib_id libalut.0.dylib
+            fix_dylib_id libalut.dylib
+            fix_dylib_id libopenal.${OPENAL_VERSION}.dylib
+            fix_dylib_id libopenal.1.dylib
+            fix_dylib_id libopenal.dylib
+        popd
     ;;
 esac
 
