@@ -102,7 +102,7 @@ case "$AUTOBUILD_PLATFORM" in
         popd
 
         mkdir -p "$stage/lib/release"
-        cp -a $stage/openal/libopenal.*so.* "$stage/lib/release"
+        cp -a $stage/openal/libopenal.so* "$stage/lib/release"
 
         mkdir -p freealut
         pushd freealut
