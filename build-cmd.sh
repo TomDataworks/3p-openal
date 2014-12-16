@@ -6,11 +6,9 @@ eval "$("$AUTOBUILD" source_environment)"
 # make errors fatal
 set -e
 
-OPENAL_VERSION="1.15.1"
-OPENAL_SOURCE_DIR="openal-soft-$OPENAL_VERSION"
+OPENAL_SOURCE_DIR="openal-soft"
 
-FREEALUT_VERSION="1.1.0"
-FREEALUT_SOURCE_DIR="freealut-$FREEALUT_VERSION"
+FREEALUT_SOURCE_DIR="freealut"
 
 if [ -z "$AUTOBUILD" ] ; then 
     fail
