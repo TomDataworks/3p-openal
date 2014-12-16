@@ -27,7 +27,8 @@ set -x
 stage="$(pwd)"
 case "$AUTOBUILD_PLATFORM" in
     "windows")
-        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12" -DCMAKE_INSTALL_PREFIX=$stage
+        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12" -DCMAKE_INSTALL_PREFIX=$stage \
+            -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
         build_sln "OpenAL.sln" "Debug|Win32" "OpenAL32"
         mkdir -p "$stage/lib"
         mv Debug "$stage/lib/debug"
@@ -48,7 +49,8 @@ case "$AUTOBUILD_PLATFORM" in
         popd
     ;;
     "windows64")
-        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12 Win64" -DCMAKE_INSTALL_PREFIX=$stage
+        cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12 Win64" -DCMAKE_INSTALL_PREFIX=$stage \
+            -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
         build_sln "OpenAL.sln" "Debug|x64" "OpenAL32"
         mkdir -p "$stage/lib"
         mv Debug "$stage/lib/debug"
@@ -71,7 +73,8 @@ case "$AUTOBUILD_PLATFORM" in
     "linux")
         mkdir -p openal
         pushd openal
-            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1 \
+                -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
             make
         popd
 
@@ -93,7 +96,8 @@ case "$AUTOBUILD_PLATFORM" in
     "linux64")
         mkdir -p openal
         pushd openal
-            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m64"
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m64" \
+                -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
             make
         popd
 
@@ -114,8 +118,9 @@ case "$AUTOBUILD_PLATFORM" in
         mkdir -p openal
         pushd openal
             cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_OSX_ARCHITECTURES='i386;x86_64' \
-                  -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS='-Wno-self-assign'
-            make
+                  -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS='-Wno-self-assign' \
+                  -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
+        make
         popd
 
         mkdir -p "$stage/lib/release"
