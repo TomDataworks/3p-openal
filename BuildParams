@@ -1,0 +1,6 @@
+# Use Public Upload Locations
+public_build = true
+
+build_Darwin = false
+
+AUTOBUILD_VSVER=100
