@@ -8,7 +8,7 @@
       <key>description</key>
       <string>OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications.</string>
       <key>license</key>
-      <string>gpl</string>
+      <string>lgpl</string>
       <key>license_file</key>
       <string>LICENSES/openal.txt</string>
       <key>name</key>
