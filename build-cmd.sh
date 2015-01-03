@@ -9,6 +9,7 @@ set -e
 OPENAL_VERSION="1.16.0"
 OPENAL_SOURCE_DIR="openal-soft"
 
+FREEALUT_VERSION="1.1.0"
 FREEALUT_SOURCE_DIR="freealut"
 
 if [ -z "$AUTOBUILD" ] ; then 
@@ -25,6 +26,9 @@ eval "$("$AUTOBUILD" source_environment)"
 set -x
 
 stage="$(pwd)"
+
+echo "${OPENAL_VERSION}-${FREEALUT_VERSION}" > "${stage}/VERSION.txt"
+
 case "$AUTOBUILD_PLATFORM" in
     "windows")
         cmake "../$OPENAL_SOURCE_DIR" -G"Visual Studio 12" -DCMAKE_INSTALL_PREFIX=$stage \
