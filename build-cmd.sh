@@ -98,11 +98,14 @@ case "$AUTOBUILD_PLATFORM" in
         popd
     ;;
     "linux64")
+        JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
+        HARDENED="-fstack-protector-strong -D_FORTIFY_SOURCE=2"
+
         mkdir -p openal
         pushd openal
-            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m64" \
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m64 $HARDENED" -DCMAKE_CXX_FLAGS="-m64 $HARDENED" \
                 -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
-            make
+            make -j$JOBS
         popd
 
         mkdir -p "$stage/lib/release"
@@ -110,9 +113,9 @@ case "$AUTOBUILD_PLATFORM" in
 
         mkdir -p freealut
         pushd freealut
-            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m64" \
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m64 $HARDENED" -DCMAKE_CXX_FLAGS="-m64 $HARDENED" \
                 -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
-            make
+            make -j$JOBS
             cp -P libalut.so "$stage/lib/release"
             cp -P libalut.so.0 "$stage/lib/release"
             cp -P libalut.so.0.0.0 "$stage/lib/release"
