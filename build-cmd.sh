@@ -6,7 +6,7 @@ eval "$("$AUTOBUILD" source_environment)"
 # make errors fatal
 set -e
 
-OPENAL_VERSION="1.16.0"
+OPENAL_VERSION="1.17.1"
 OPENAL_SOURCE_DIR="openal-soft"
 
 FREEALUT_VERSION="1.1.0"
@@ -75,23 +75,24 @@ case "$AUTOBUILD_PLATFORM" in
         popd
     ;;
     "linux")
+        JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
+        HARDENED="-fstack-protector -D_FORTIFY_SOURCE=2"
+
         mkdir -p openal
         pushd openal
-            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1 \
+            cmake ../../$OPENAL_SOURCE_DIR -DCMAKE_C_FLAGS="-m32 $HARDENED" -DCMAKE_CXX_FLAGS="-m32 $HARDENED" \
                 -DALSOFT_NO_CONFIG_UTIL:BOOL=ON -DALSOFT_UTILS:BOOL=OFF
-            make
+            make -j$JOBS
         popd
 
         mkdir -p "$stage/lib/release"
-        cp -P "$stage/openal/libopenal.so" "$stage/lib/release"
-        cp -P "$stage/openal/libopenal.so.1" "$stage/lib/release"
-        cp "$stage/openal/libopenal.so.1.12.854" "$stage/lib/release"
+        cp -a $stage/openal/libopenal.so* "$stage/lib/release"
 
         mkdir -p freealut
         pushd freealut
-            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32" -DCMAKE_C_COMPILER=gcc-4.1 \
+            cmake ../../$FREEALUT_SOURCE_DIR -DCMAKE_C_FLAGS="-m32 $HARDENED" -DCMAKE_CXX_FLAGS="-m32 $HARDENED" \
                 -DOPENAL_LIB_DIR="$stage/openal" -DOPENAL_INCLUDE_DIR="$stage/../$OPENAL_SOURCE_DIR/include"
-            make
+            make -j$JOBS
             cp -P libalut.so "$stage/lib/release"
             cp -P libalut.so.0 "$stage/lib/release"
             cp -P libalut.so.0.0.0 "$stage/lib/release"
@@ -99,7 +100,7 @@ case "$AUTOBUILD_PLATFORM" in
     ;;
     "linux64")
         JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
-        HARDENED="-fstack-protector-strong -D_FORTIFY_SOURCE=2"
+        HARDENED="-fstack-protector -D_FORTIFY_SOURCE=2"
 
         mkdir -p openal
         pushd openal
